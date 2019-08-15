@@ -47,6 +47,7 @@
     <Compile Include="Logic\Bracelet.cs" />
     <Compile Include="Logic\Doll.cs" />
     <Compile Include="Logic\Dress.cs" />
+    <Compile Include="Logic\EColor.cs" />
     <Compile Include="Logic\IClonable.cs" />
     <Compile Include="Logic\Necklace.cs" />
     <Compile Include="Logic\PageantJury.cs" />

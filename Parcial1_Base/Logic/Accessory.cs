@@ -21,7 +21,7 @@
         public virtual int Style
         {
             // Returns the base style score and any style bonus, if any applies.
-            get => (int)(System.Math.Round(style * StyleMod));
+            get => (int)(System.Math.Round(style * (1 + StyleMod)));
 
             // Sets the base style score for this accessory.
             protected set => style = value;
