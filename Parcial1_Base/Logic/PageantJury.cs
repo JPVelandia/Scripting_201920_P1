@@ -16,11 +16,6 @@ namespace Parcial1_Base.Logic
         private List<Doll> contestants = new List<Doll>(MAX_CONTESTANTS);
 
         /// <summary>
-        /// The sorted contestants collection after the results.
-        /// </summary>
-        private List<Doll> sortedContestants;
-
-        /// <summary>
         /// Returns the total contestants count for a pageant round.
         /// </summary>
         public int TotalContestants { get => contestants.Count; }
@@ -72,7 +67,7 @@ namespace Parcial1_Base.Logic
 
                 default:
                     //Sort descending the contestants by Style score, retrieve the first of them.
-                    sortedContestants = contestants.OrderByDescending(doll => doll.Style).ToList();
+                    List<Doll> sortedContestants = contestants.OrderByDescending(doll => doll.Style).ToList();
                     return sortedContestants[0];
             }
 

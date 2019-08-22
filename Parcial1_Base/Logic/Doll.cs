@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Parcial1_Base.Logic.Dress;
 
 namespace Parcial1_Base.Logic
 {
@@ -32,7 +33,7 @@ namespace Parcial1_Base.Logic
         /// <summary>
         /// The bracelets collection.
         /// </summary>
-        private List<Bracelet> Bracelets { get; protected set; } = new List<Bracelet>();
+        private List<Bracelet> Bracelets { get; set; } = new List<Bracelet>();
 
         /// <summary>
         /// Reference to the doll's dress
@@ -60,10 +61,13 @@ namespace Parcial1_Base.Logic
         public bool CanParticipate { get => Dress != null; }
 
         /// <summary>
-        /// The total accessories count worn by the doll.
+        /// The amount of accessories worn by the doll.
         /// </summary>
         public int TotalAccessories { get => accessories.Count; }
 
+        /// <summary>
+        /// The amount of bracelets worn by the doll
+        /// </summary>
         public int BraceletCount { get => Bracelets.Count; }
 
         /// <summary>
@@ -98,40 +102,35 @@ namespace Parcial1_Base.Logic
         {
             bool result = false;
 
-            foreach (Accessory accessory in accessories)
+            if (accessories.Contains(a))
             {
-                if (a == accessory)
+                if (a is Bracelet bracelet)
                 {
-                    if (accessory is Bracelet)
-                    {
-                        Bracelets.Remove(accessory as Bracelet);
-                    }
-                    else if (accessory is Purse)
-                    {
-                        Purse.ApplyStyleBonus = false;
-                        Purse = null;
-                    }
-                    else if (accessory is Necklace)
-                    {
-                        Necklace = null;
-                    }
-                    else if (accessory is Dress)
-                    {
-                        Dress = null;
-                        Necklace = null;
-                        Purse = null;
-                        Bracelets.Clear();
-                        accessories.Clear();
-                        break;
-                    }
-
-                    if (accessories.Contains(a))
-                    {
-                        accessories.Remove(a);
-                    }
-
-                    result = true;
+                    Bracelets.Remove(bracelet);
                 }
+                else if (a is Purse)
+                {
+                    Purse = null;
+                }
+                else if (a is Necklace)
+                {
+                    Necklace = null;
+                }
+                else if (a is Dress)
+                {
+                    Dress = null;
+                    Necklace = null;
+                    Purse = null;
+                    Bracelets.Clear();
+                    accessories.Clear();
+                }
+
+                if (accessories.Contains(a))
+                {
+                    accessories.Remove(a);
+                }
+
+                result = true;
             }
 
             return result;
@@ -144,9 +143,11 @@ namespace Parcial1_Base.Logic
         /// <returns>True if the doll successfully wore the accessory. False otherwise</returns>
         public bool Wear(Accessory a)
         {
-            if (a is Dress newDress)
+            if (Dress == null)
             {
-                if (Dress == null)
+                #region EquipDress
+
+                if (a is Dress newDress)
                 {
                     Dress = newDress;
 
@@ -157,11 +158,15 @@ namespace Parcial1_Base.Logic
                 {
                     goto CantEquip;
                 }
+
+                #endregion EquipDress
             }
-            else if (Dress != null)
+            else
             {
                 if (a is Necklace newNecklace)
                 {
+                    #region EquipNecklace
+
                     if (Necklace == null)
                     {
                         switch (Dress.Color)
@@ -187,11 +192,15 @@ namespace Parcial1_Base.Logic
                     {
                         goto CantEquip;
                     }
+
+                    #endregion EquipNecklace
                 }
                 else
                 {
                     if (a is Purse newPurse)
                     {
+                        #region EquipPurse
+
                         newPurse.ApplyStyleBonus = false;
 
                         if (Purse == null)
@@ -209,11 +218,15 @@ namespace Parcial1_Base.Logic
                         {
                             goto CantEquip;
                         }
+
+                        #endregion EquipPurse
                     }
                     else
                     {
                         if (a is Bracelet newBracelet && Bracelets.Count < MAX_BRACELETS)
                         {
+                            #region EquipBracelet
+
                             newBracelet.ApplyStylePenalty = false;
                             Bracelets.Add(newBracelet);
 
@@ -243,6 +256,8 @@ namespace Parcial1_Base.Logic
                                 default:
                                     goto CantEquip;
                             }
+
+                            #endregion EquipBracelet
                         }
                         else
                         {
@@ -250,10 +265,6 @@ namespace Parcial1_Base.Logic
                         }
                     }
                 }
-            }
-            else
-            {
-                goto CantEquip;
             }
 
         EquipAccessory:
